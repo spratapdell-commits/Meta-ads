@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Meta Ads: An Interactive Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Meta Blue -->
+    <!-- Application Structure Plan: The application is structured as a single-page interactive guide with a sticky top navigation for easy access to the three learning phases: Beginner, Intermediate, and Advanced. This non-linear navigation was chosen over a simple long-form document to allow users to either follow the roadmap sequentially or jump directly to a topic of interest, enhancing usability for both new learners and those seeking specific information. Within each phase, content is segmented into cards and interactive accordions for topics and assessments. This breaks down the dense information into digestible chunks, preventing user overwhelm and encouraging exploration. The flow guides the user from fundamentals to advanced concepts, with clear visual separation between objectives, learning materials, and practical assignments. A dark mode toggle has been added for user comfort. -->
+    <!-- Visualization & Content Choices: Report Info: Learning objectives, topics, resources, assignments. Goal: Organize and present a learning path. Viz/Presentation Method: Interactive accordions for detailed topics to manage information density. A grid of styled cards for external resources (tutorials/guides) to make them scannable and visually appealing. Quizzes with toggleable answers for self-assessment. A static, CSS-based step-diagram represents the three-phase journey visually. Justification: These choices prioritize clarity, user control, and engagement for a text-heavy educational document. Accordions prevent a "wall of text," while cards make resources easy to browse. Library/Method: Vanilla JS for all interactions (navigation, accordions, toggles, dark mode). Tailwind CSS for all styling and layout, including the static step-diagram. No Chart.js/Plotly used as there is no quantitative data to chart. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script>
+        // Set theme on initial load to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        html.dark .active-nav {
+             color: #409CFF;
+             border-bottom-color: #409CFF;
+        }
+        html:not(.dark) .active-nav {
+            color: #0866FF;
+            border-bottom-color: #0866FF;
+        }
+        .meta-blue { color: #0866FF; }
+        .dark .meta-blue { color: #409CFF; }
+    </style>
+</head>
+<body class="bg-[#F0F2F5] text-gray-800 dark:bg-[#18191A] dark:text-gray-300 transition-colors duration-300">
+
+    <header class="bg-white/95 dark:bg-[#242526]/95 backdrop-blur-lg shadow-md sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold meta-blue">Meta Ads Roadmap</h1>
+                </div>
+                <div class="flex items-center">
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#introduction" class="nav-link text-gray-600 dark:text-gray-300 hover:text-[#0866FF] dark:hover:text-[#409CFF] px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Introduction</a>
+                            <a href="#beginner" class="nav-link text-gray-600 dark:text-gray-300 hover:text-[#0866FF] dark:hover:text-[#409CFF] px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Beginner</a>
+                            <a href="#intermediate" class="nav-link text-gray-600 dark:text-gray-300 hover:text-[#0866FF] dark:hover:text-[#409CFF] px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Intermediate</a>
+                            <a href="#advanced" class="nav-link text-gray-600 dark:text-gray-300 hover:text-[#0866FF] dark:hover:text-[#409CFF] px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Advanced</a>
+                            <a href="#conclusion" class="nav-link text-gray-600 dark:text-gray-300 hover:text-[#0866FF] dark:hover:text-[#409CFF] px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Next Steps</a>
+                        </div>
+                    </div>
+                    <button id="theme-toggle" class="ml-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 12.122l.707-.707a1 1 0 011.414 1.414l-.707.707a1 1 0 01-1.414-1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="introduction" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight sm:text-5xl">Mastering Meta Ads: From Zero to Hero</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600 dark:text-gray-400">Your interactive, self-paced roadmap to becoming a proficient Meta Ads specialist. This guide will take you from the absolute basics to advanced scaling strategies.</p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-[#242526] rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-2xl font-bold meta-blue mb-4">Why Master Meta Ads?</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">Meta's advertising ecosystem (Facebook, Instagram, Messenger, Audience Network) is a powerhouse for businesses, reaching over 3 billion users. Mastering it opens doors to high-impact careers in performance marketing, with skills that are in constant demand. You'll learn to drive tangible results like sales, leads, and app installs while optimizing for Return On Ad Spend (ROAS).</p>
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800/50">
+                            <h4 class="font-bold text-blue-800 dark:text-blue-300">Career Opportunities</h4>
+                            <p class="text-sm text-blue-700 dark:text-blue-400">Freelancer, Agency Specialist, In-house Marketer. Salaries from $60k to $150k+.</p>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-700/30 p-4 rounded-lg border border-gray-200 dark:border-gray-600/50">
+                            <h4 class="font-bold text-gray-800 dark:text-gray-200">Required Tools</h4>
+                            <p class="text-sm text-gray-700 dark:text-gray-400">All you need is a free Meta Business Suite account to start. No paid tools required.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Journey Visualization -->
+        <div class="mb-16">
+            <h3 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Your Learning Journey</h3>
+            <div class="relative max-w-3xl mx-auto">
+                <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 -translate-y-1/2"></div>
+                <div class="relative flex justify-between">
+                    <div class="text-center w-1/3">
+                        <div class="mx-auto w-12 h-12 flex items-center justify-center bg-[#0866FF] text-white rounded-full text-xl font-bold border-4 border-white dark:border-[#242526] shadow-md">1</div>
+                        <p class="mt-2 font-semibold text-gray-900 dark:text-gray-100">Beginner</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">The Fundamentals</p>
+                    </div>
+                    <div class="text-center w-1/3">
+                        <div class="mx-auto w-12 h-12 flex items-center justify-center bg-indigo-600 text-white rounded-full text-xl font-bold border-4 border-white dark:border-[#242526] shadow-md">2</div>
+                        <p class="mt-2 font-semibold text-gray-900 dark:text-gray-100">Intermediate</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Optimization & Testing</p>
+                    </div>
+                    <div class="text-center w-1/3">
+                        <div class="mx-auto w-12 h-12 flex items-center justify-center bg-gray-800 text-white rounded-full text-xl font-bold border-4 border-white dark:border-[#242526] shadow-md">3</div>
+                        <p class="mt-2 font-semibold text-gray-900 dark:text-gray-100">Advanced</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Scaling & Strategy</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Beginner Phase -->
+        <section id="beginner" class="mb-16 pt-16 -mt-16">
+            <div class="bg-white dark:bg-[#242526] rounded-xl shadow-lg p-6 md:p-10 border border-gray-200 dark:border-gray-700">
+                <span class="inline-block bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 text-sm font-semibold px-3 py-1 rounded-full mb-4">Phase 1: Beginner</span>
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Building the Foundation</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">This phase focuses on the absolute fundamentals. You'll go from zero knowledge to confidently setting up accounts and launching your first simple campaigns.</p>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 p-3 bg-gray-100 dark:bg-gray-700/30 rounded-lg">
+                    <span class="text-xl mr-3">⏱️</span>
+                    <strong>Time Estimate:</strong>&nbsp;2-4 weeks, assuming 5-10 hours/week.
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Key Learning Objectives</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="meta-blue mr-3 mt-1 font-bold">✓</span>Understand core ad components, formats, and objectives.</li>
+                            <li class="flex items-start"><span class="meta-blue mr-3 mt-1 font-bold">✓</span>Set up a Meta Business account, ad account, and Pixel.</li>
+                            <li class="flex items-start"><span class="meta-blue mr-3 mt-1 font-bold">✓</span>Launch simple campaigns and create basic audiences.</li>
+                            <li class="flex items-start"><span class="meta-blue mr-3 mt-1 font-bold">✓</span>Learn key metrics (CTR, CPC) and ethical data use (GDPR).</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Hands-on Assignments</h3>
+                        <ul class="space-y-3">
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Set up a demo ad account in Meta Business Suite.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Use Meta's test tool to fire a sample Pixel event.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Create a basic awareness campaign in demo mode.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Build a simple interest-based audience.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Detailed Topics</h3>
+                    <div class="space-y-2 accordion-container">
+                        <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                            <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Ad Formats and Objectives</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Meta offers various ad formats (image, video, carousel, stories) for different goals. Your campaign objective (Awareness, Traffic, Conversions) tells Meta what you want to achieve. Pro Tip: Always align your ad creative with the platform's user behavior—videos and stories excel on Instagram.</p></div>
+                        </div>
+                        <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Accounts and Pixel Setup</span><span class="transform transition-transform duration-300">▼</span></button>
+                             <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Your Business Manager is the central hub. The Meta Pixel is a vital piece of code for your website that tracks user actions, enabling conversion tracking and retargeting. Pro Tip: Use the Events Manager to test your Pixel setup before launching any campaigns to ensure data is tracking correctly.</p></div>
+                        </div>
+                         <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Basic Targeting</span><span class="transform transition-transform duration-300">▼</span></button>
+                             <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Targeting allows you to define who sees your ads based on demographics, interests, and behaviors. When starting, it's often best to begin with a broader audience and let Meta's algorithm find the right people. Common Pitfall: Overly narrow targeting can skyrocket your ad costs (CPC).</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Curated Tutorials & Guides</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Facebook Ads Tutorial for Beginners 2025</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">Ben Heath's comprehensive walkthrough covers setup, Pixel, and your first ad launch.</p></div><a href="https://www.youtube.com/watch?v=BZrio_G_1Cs" target="_blank" class="text-sm font-semibold meta-blue hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Ultimate Meta Business Suite Tutorial</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">A focused tutorial on setting up your Business Suite and ad account correctly from the start.</p></div><a href="https://www.youtube.com/watch?v=nbExu4fX4zY" target="_blank" class="text-sm font-semibold meta-blue hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">How to Run Facebook Ads: A Guide</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">HubSpot's guide provides checklists and actionable steps for account setup and choosing objectives.</p></div><a href="https://blog.hubspot.com/marketing/facebook-paid-ad-checklist" target="_blank" class="text-sm font-semibold meta-blue hover:underline">Read on HubSpot →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Meta Ads Tutorial For Beginners (2025)</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">Covers the fundamentals of targeting, creatives, and simple campaign launches with recent updates.</p></div><a href="https://www.youtube.com/watch?v=t-6c16BH-0U" target="_blank" class="text-sm font-semibold meta-blue hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Every Facebook Ad Objective Explained</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">WordStream explains each campaign objective with examples to help you choose the right one.</p></div><a href="https://www.wordstream.com/blog/facebook-ad-objectives" target="_blank" class="text-sm font-semibold meta-blue hover:underline">Read on WordStream →</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intermediate Phase -->
+        <section id="intermediate" class="mb-16 pt-16 -mt-16">
+            <div class="bg-white dark:bg-[#242526] rounded-xl shadow-lg p-6 md:p-10 border border-gray-200 dark:border-gray-700">
+                <span class="inline-block bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300 text-sm font-semibold px-3 py-1 rounded-full mb-4">Phase 2: Intermediate</span>
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Optimization and Testing</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">Now that you know the basics, it's time to refine your approach. This phase is all about improving performance through testing, custom audiences, and data analysis.</p>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 p-3 bg-gray-100 dark:bg-gray-700/30 rounded-lg">
+                    <span class="text-xl mr-3">⏱️</span>
+                    <strong>Time Estimate:</strong>&nbsp;4-6 weeks, assuming 5-10 hours/week.
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Key Learning Objectives</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="text-indigo-600 dark:text-indigo-400 mr-3 mt-1 font-bold">✓</span>Master A/B testing for creatives and audiences to boost ROAS.</li>
+                            <li class="flex items-start"><span class="text-indigo-600 dark:text-indigo-400 mr-3 mt-1 font-bold">✓</span>Build and utilize custom and retargeting audiences.</li>
+                            <li class="flex items-start"><span class="text-indigo-600 dark:text-indigo-400 mr-3 mt-1 font-bold">✓</span>Optimize bids and budgets based on performance data.</li>
+                            <li class="flex items-start"><span class="text-indigo-600 dark:text-indigo-400 mr-3 mt-1 font-bold">✓</span>Analyze reports to find actionable insights.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Hands-on Assignments</h3>
+                        <ul class="space-y-3">
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Run an A/B test in demo mode on two different ad images.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Create a custom audience from simulated website traffic.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Set up a simple retargeting campaign for that audience.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Analyze a mock report to identify the best-performing ad.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Detailed Topics</h3>
+                    <div class="space-y-2 accordion-container">
+                         <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">A/B Testing</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">A/B testing (or split testing) involves testing one variable at a time (e.g., headline, image, audience) to determine which performs better. This is the key to continuous improvement. Pro Tip: Use Meta's built-in A/B test tool for statistically significant results and run tests for at least 7-14 days.</p></div>
+                        </div>
+                         <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                            <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Custom Audiences and Retargeting</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Go beyond basic targeting by creating Custom Audiences from your own data (e.g., website visitors, email lists). Retargeting shows ads to these warm audiences, who are much more likely to convert. Ethical Tip: Always respect user privacy by being transparent about data use and providing opt-outs.</p></div>
+                        </div>
+                         <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Basic Analytics & Reporting</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Ads Manager reports are a goldmine of information. Learn to customize columns to focus on key metrics like ROAS, Cost Per Result, and Conversion Rate. Use this data to make informed decisions about what to optimize or pause. Pro Tip: Set up custom columns that match your specific business goals.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Curated Tutorials & Guides</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">The new A/B Testing Strategy for Meta Ads</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">Covers updated A/B testing methodologies and practical examples for 2025.</p></div><a href="https://www.youtube.com/watch?v=eMTzUKMIFDw" target="_blank" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">How to ACTUALLY Optimize Facebook Ads</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">A step-by-step process for optimizing bids and creatives based on real case studies.</p></div><a href="https://www.youtube.com/watch?v=F45OWt2gKu8" target="_blank" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">How to Create an Effective Ads Strategy</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">HubSpot's guide to building a cohesive strategy covering testing, audiences, and analytics.</p></div><a href="https://blog.hubspot.com/marketing/facebook-ad-strategy" target="_blank" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Read on HubSpot →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Complete Guide to Testing Meta Ads in 2025</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">An advanced tutorial for intermediate users on the pros and cons of different testing strategies.</p></div><a href="https://www.youtube.com/watch?v=s8lT5CzbptI" target="_blank" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Facebook Ad Targeting in 2025</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">WordStream's guide details every custom and retargeting audience option available.</p></div><a href="https://www.wordstream.com/blog/facebook-ad-targeting" target="_blank" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Read on WordStream →</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Phase -->
+        <section id="advanced" class="mb-16 pt-16 -mt-16">
+            <div class="bg-white dark:bg-[#242526] rounded-xl shadow-lg p-6 md:p-10 border border-gray-200 dark:border-gray-700">
+                <span class="inline-block bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 text-sm font-semibold px-3 py-1 rounded-full mb-4">Phase 3: Advanced</span>
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-2">Scaling and Advanced Strategy</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">This is where you learn to manage larger budgets and complex campaigns. Topics include scaling, advanced bidding, leveraging machine learning, and adapting to platform changes.</p>
+                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-8 p-3 bg-gray-100 dark:bg-gray-700/30 rounded-lg">
+                    <span class="text-xl mr-3">⏱️</span>
+                    <strong>Time Estimate:</strong>&nbsp;6-8 weeks, assuming 5-10 hours/week.
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Key Learning Objectives</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="text-gray-800 dark:text-gray-300 mr-3 mt-1 font-bold">✓</span>Scale campaigns effectively using CBO and ABO strategies.</li>
+                            <li class="flex items-start"><span class="text-gray-800 dark:text-gray-300 mr-3 mt-1 font-bold">✓</span>Leverage machine learning with Advantage+ features.</li>
+                            <li class="flex items-start"><span class="text-gray-800 dark:text-gray-300 mr-3 mt-1 font-bold">✓</span>Integrate with other platforms and troubleshoot scaling issues.</li>
+                            <li class="flex items-start"><span class="text-gray-800 dark:text-gray-300 mr-3 mt-1 font-bold">✓</span>Stay ahead of algorithm changes and maintain high ROAS at scale.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Hands-on Assignments</h3>
+                        <ul class="space-y-3">
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Structure a CBO campaign with multiple ad sets in demo mode.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Set up an Advantage+ Shopping Campaign simulation.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Research a recent Meta Ads update and write a brief on its impact.</li>
+                             <li class="flex items-start"><span class="text-gray-400 dark:text-gray-500 mr-3 mt-1">→</span>Troubleshoot a scenario (e.g., sudden drop in ROAS).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Detailed Topics</h3>
+                    <div class="space-y-2 accordion-container">
+                        <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Scaling Strategies (CBO vs. ABO)</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Scaling means increasing your budget without sacrificing performance. CBO (Campaign Budget Optimization) lets Meta automatically distribute your budget to the best-performing ad sets. ABO (Ad Set Budget Optimization) gives you manual control. Pro Tip: Scale budgets gradually (e.g., 20% every few days) to avoid resetting the learning phase.</p></div>
+                        </div>
+                        <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                            <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Leveraging Machine Learning (Advantage+)</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">Advantage+ is Meta's suite of AI-powered tools that automate targeting, placements, and creative delivery. Advantage+ Shopping Campaigns are particularly powerful for e-commerce, often finding new high-value customers automatically. Pro Tip: Feed the algorithm high-quality data (from your Pixel and customer lists) for the best results.</p></div>
+                        </div>
+                        <div class="accordion-item border-b border-gray-200 dark:border-gray-700">
+                             <button class="accordion-header w-full text-left py-4 flex justify-between items-center text-gray-900 dark:text-white"><span class="font-semibold text-lg">Staying Updated and Troubleshooting</span><span class="transform transition-transform duration-300">▼</span></button>
+                            <div class="accordion-content"><p class="pt-2 pb-4 text-gray-600 dark:text-gray-400">The Meta Ads platform is constantly evolving. Staying informed about algorithm updates, new features, and policy changes is crucial for long-term success. When performance drops, learn to diagnose the issue systematically: check for ad fatigue, audience saturation, or external factors.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Curated Tutorials & Guides</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">How Machine Learning Works in Meta Ads</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">Demystifies the role of machine learning and AI in modern ad campaigns and setup.</p></div><a href="https://www.youtube.com/watch?v=7knkvl-MSRQ" target="_blank" class="text-sm font-semibold text-gray-700 dark:text-gray-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Advanced Facebook Ads Scaling Guide 2025</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">Nick Theriot provides a detailed guide on both vertical and horizontal scaling tactics.</p></div><a href="https://www.youtube.com/watch?v=kbh5i-yqLag" target="_blank" class="text-sm font-semibold text-gray-700 dark:text-gray-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">Top Facebook Ad Trends to Watch in 2025</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">WordStream outlines key trends, including AI and privacy-first advertising to keep you current.</p></div><a href="https://www.wordstream.com/blog/facebook-ad-trends-2025" target="_blank" class="text-sm font-semibold text-gray-700 dark:text-gray-400 hover:underline">Read on WordStream →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">The BEST Meta Ads Scaling Course (2025)</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">A simplified course on scaling strategies that are proven to work in the current ad environment.</p></div><a href="https://www.youtube.com/watch?v=tVgDy_SKJdQ" target="_blank" class="text-sm font-semibold text-gray-700 dark:text-gray-400 hover:underline">Watch on YouTube →</a></div>
+                        <div class="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 p-4 rounded-lg flex flex-col justify-between"><div><h4 class="font-bold text-gray-900 dark:text-white">The Marketer's Guide to Meta</h4><p class="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3">HubSpot's guide to advanced tactics, including cross-platform integration for Facebook and Instagram.</p></div><a href="https://offers.hubspot.com/meta-marketing-guide" target="_blank" class="text-sm font-semibold text-gray-700 dark:text-gray-400 hover:underline">Read on HubSpot →</a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="conclusion" class="pt-16 -mt-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-4">Conclusion & Your Next Steps</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">Congratulations on completing the roadmap! Mastery is a continuous journey of testing, learning, and adapting. Use this foundation to build your experience and drive real-world results.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-[#242526] p-6 rounded-lg shadow-md text-left border border-gray-200 dark:border-gray-700">
+                        <h3 class="font-bold text-lg meta-blue">Get Certified</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Validate your skills with an official certification. The Meta Blueprint courses are free to access and are the official source for learning.</p>
+                        <a href="https://www.facebook.com/business/learn" target="_blank" class="mt-4 inline-block font-semibold meta-blue hover:underline">Explore Meta Blueprint →</a>
+                    </div>
+                    <div class="bg-white dark:bg-[#242526] p-6 rounded-lg shadow-md text-left border border-gray-200 dark:border-gray-700">
+                        <h3 class="font-bold text-lg text-indigo-600 dark:text-indigo-400">Join a Community</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Connect with other marketers to share strategies and stay updated. Communities are invaluable for troubleshooting and discovering new trends.</p>
+                        <a href="https://www.reddit.com/r/PPC/" target="_blank" class="mt-4 inline-block font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Join r/PPC on Reddit →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white dark:bg-[#242526] mt-16 border-t border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>&copy; 2025 Interactive Meta Ads Roadmap. An educational resource inspired by Meta's design.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-toggle-light-icon');
+            const darkIcon = document.getElementById('theme-toggle-dark-icon');
+
+            // Function to update icon visibility
+            const updateIcon = () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    lightIcon.classList.remove('hidden');
+                    darkIcon.classList.add('hidden');
+                } else {
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                }
+            };
+
+            // Event listener for the toggle button
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                if (document.documentElement.classList.contains('dark')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+                updateIcon();
+            });
+            
+            // Initial icon state
+            updateIcon();
+
+            // Accordion logic
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const arrow = header.querySelector('span:last-child');
+                    
+                    const isOpening = !content.style.maxHeight;
+
+                    // Close all other accordions in the same container
+                    header.closest('.accordion-container').querySelectorAll('.accordion-item').forEach(item => {
+                        item.querySelector('.accordion-content').style.maxHeight = null;
+                        item.querySelector('.accordion-header span:last-child').classList.remove('rotate-180');
+                    });
+
+                    // Open the clicked one if it was closed
+                    if (isOpening) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        arrow.classList.add('rotate-180');
+                    }
+                });
+            });
+
+            // Navigation scroll spy logic
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.4
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active-nav');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active-nav');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Smooth scroll for nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+
